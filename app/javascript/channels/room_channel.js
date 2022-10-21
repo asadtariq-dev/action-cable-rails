@@ -1,17 +1,26 @@
-import consumer from "./consumer"
+import consumer from "./consumer";
 
-consumer.subscriptions.create("RoomChannel", {
-  connected() {
-    console.log('Connected to Room Channel')
-    // Called when the subscription is ready for use on the server
-  },
+document.addEventListener("turbolinks:load", () => {
+  const element = document.getElementById("room_id");
+  const room_id = element.getAttribute("data-room-id");
 
-  disconnected() {
-    console.log('Disconnected from Room Channel')
-    // Called when the subscription has been terminated by the server
-  },
+  consumer.subscriptions.create(
+    {
+      channel: "RoomChannel",
+      room_id: room_id,
+    },
+    {
+      connected() {
+        console.log("Connected to Room Channel", room_id);
+      },
 
-  received(data) {
-    // Called when there's incoming data on the websocket for this channel
-  }
+      disconnected() {
+        console.log("Disconnected from Room Channel");
+      },
+
+      received(data) {
+        console.log(data);
+      },
+    }
+  );
 });
